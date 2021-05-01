@@ -1,4 +1,5 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class FoodBankPatrons{
     public static void main(String[] args){
@@ -16,13 +17,13 @@ class FoodBank{
     }
 
     //method to give food. returns new total
-    public int giveFood(int foodIn){
+    public synchronized int giveFood(int foodIn){
         this.food = this.food + foodIn;
         return this.food;
     }
 
     //method to take food. returns new total
-    public int takeFood(int foodOut){
+    public synchronized int takeFood(int foodOut){
         if (foodOut <= this.food){ //if there is enough food for request
             this.food = this.food - foodOut;
             return this.food;
@@ -42,8 +43,24 @@ class FoodProdcuer extends Thread{
 
     @Override
     public void run(){
-        int foodIn = ThreadLocalRandom.current().nextInt(1, 101);
-        //Need to use locks, try giving, then unlocking
+        int foodIn;
+        int newTotal;
+        while(true){
+            foodIn = ThreadLocalRandom.current().nextInt(1, 101);
+            //waits
+            System.out.println("Waiting to add food...");
+            //locks
+            newTotal = sharedBank.giveFood(foodIn);
+            //unlocks
+            System.out.println("Giving " + foodIn + 
+                " items of food; the balance is now " + newTotal + ".");
+            try{
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
 }
@@ -57,7 +74,35 @@ class FoodConsumer extends Thread{
 
     @Override
     public void run(){
-        int foodOut = ThreadLocalRandom.current().nextInt(1, 101);
-        //need to use locks, try taking, then unlocking
+        int foodOut;
+        int newTotal;
+        while(true){
+            foodOut = ThreadLocalRandom.current().nextInt(1, 101);
+            //waits
+            System.out.println("Waiting to take food...");
+            //locks
+            newTotal = sharedBank.giveFood(foodOut);
+            //unlocks
+            if(newTotal != -403){
+                System.out.println("Taking " + foodOut + 
+                " items of food; the balance is now " + newTotal + ".");
+                try{
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException ex){
+                    Thread.currentThread().interrupt();
+                }
+            }
+            else{
+                System.out.println("Failed to take " + foodOut + 
+                " items of food; the balance was too low.");
+                try{
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException ex){
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
     }
 }
