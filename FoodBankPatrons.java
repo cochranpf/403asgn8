@@ -1,9 +1,15 @@
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 public class FoodBankPatrons{
     public static void main(String[] args){
+        //creating bank, producer, and consumer
+        FoodBank sharedBank = new FoodBank();
+        FoodProdcuer prod = new FoodProdcuer(sharedBank);
+        FoodConsumer con = new FoodConsumer(sharedBank);
 
+        //starting producer and consumer
+        prod.start();
+        con.start();
     }
 }
 
@@ -48,7 +54,7 @@ class FoodProdcuer extends Thread{
         while(true){
             foodIn = ThreadLocalRandom.current().nextInt(1, 101);
             //waits
-            System.out.println("Waiting to add food...");
+            System.out.println("Waiting to give food...");
             //locks
             newTotal = sharedBank.giveFood(foodIn);
             //unlocks
@@ -81,7 +87,7 @@ class FoodConsumer extends Thread{
             //waits
             System.out.println("Waiting to take food...");
             //locks
-            newTotal = sharedBank.giveFood(foodOut);
+            newTotal = sharedBank.takeFood(foodOut);
             //unlocks
             if(newTotal != -403){
                 System.out.println("Taking " + foodOut + 
