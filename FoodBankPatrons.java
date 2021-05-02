@@ -53,11 +53,8 @@ class FoodProdcuer extends Thread{
         int newTotal;
         while(true){
             foodIn = ThreadLocalRandom.current().nextInt(1, 101);
-            //waits
             System.out.println("Waiting to give food...");
-            //locks
             newTotal = sharedBank.giveFood(foodIn);
-            //unlocks
             System.out.println("Giving " + foodIn + 
                 " items of food; the balance is now " + newTotal + ".");
             try{
@@ -84,11 +81,8 @@ class FoodConsumer extends Thread{
         int newTotal;
         while(true){
             foodOut = ThreadLocalRandom.current().nextInt(1, 101);
-            //waits
             System.out.println("Waiting to take food...");
-            //locks
             newTotal = sharedBank.takeFood(foodOut);
-            //unlocks
             if(newTotal != -403){
                 System.out.println("Taking " + foodOut + 
                 " items of food; the balance is now " + newTotal + ".");
