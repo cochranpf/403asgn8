@@ -61,7 +61,7 @@ class FoodProdcuer extends Thread{
             System.out.println("Giving " + foodIn + 
                 " items of food; the balance is now " + newTotal + ".");
             try{
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }
             catch (InterruptedException ex){
                 Thread.currentThread().interrupt();
@@ -93,7 +93,7 @@ class FoodConsumer extends Thread{
                 System.out.println("Taking " + foodOut + 
                 " items of food; the balance is now " + newTotal + ".");
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }
                 catch (InterruptedException ex){
                     Thread.currentThread().interrupt();
@@ -103,7 +103,7 @@ class FoodConsumer extends Thread{
                 System.out.println("Failed to take " + foodOut + 
                 " items of food; the balance was too low.");
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }
                 catch (InterruptedException ex){
                     Thread.currentThread().interrupt();
