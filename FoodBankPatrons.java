@@ -1,5 +1,11 @@
 import java.util.concurrent.ThreadLocalRandom;
 
+// Paul Cochran
+// V00824587
+// Assignment 8 - CMSC 403
+// This is my last assignment of undergrad, wow. Great class to end on.
+// 5/3/2021
+
 public class FoodBankPatrons{
     public static void main(String[] args){
         //creating bank, producer, and consumer
@@ -13,7 +19,7 @@ public class FoodBankPatrons{
     }
 }
 
-
+//foodBank object, as specified
 class FoodBank{
     private int food;
 
@@ -52,9 +58,9 @@ class FoodProdcuer extends Thread{
         int foodIn;
         int newTotal;
         while(true){
-            foodIn = ThreadLocalRandom.current().nextInt(1, 101);
+            foodIn = ThreadLocalRandom.current().nextInt(1, 101); //creates random amount of food
             System.out.println("Waiting to give food...");
-            newTotal = sharedBank.giveFood(foodIn);
+            newTotal = sharedBank.giveFood(foodIn); //critical section
             System.out.println("Giving " + foodIn + 
                 " items of food; the balance is now " + newTotal + ".");
             try{
@@ -80,10 +86,10 @@ class FoodConsumer extends Thread{
         int foodOut;
         int newTotal;
         while(true){
-            foodOut = ThreadLocalRandom.current().nextInt(1, 101);
+            foodOut = ThreadLocalRandom.current().nextInt(1, 101); //creates random amount of food
             System.out.println("Waiting to take food...");
-            newTotal = sharedBank.takeFood(foodOut);
-            if(newTotal != -403){
+            newTotal = sharedBank.takeFood(foodOut); //critical section
+            if(newTotal != -403){ //-403 is the designated error value
                 System.out.println("Taking " + foodOut + 
                 " items of food; the balance is now " + newTotal + ".");
                 try{
