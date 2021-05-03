@@ -27,9 +27,6 @@ public class RaceTrack extends Application{
         primaryStage.setMaxWidth(500);
 
 
-
-        
-
         VBox root = new VBox();
         Scene startScene = new Scene(root);
 
@@ -64,30 +61,33 @@ public class RaceTrack extends Application{
         track2.setFill(Color.DARKGREY);
         track3.setFill(Color.DARKGREY);
 
-
-        //SET UP CARS
-        Car Car1 = new Car(1, car1);
-        Car Car2 = new Car(2, car2);
-        Car Car3 = new Car(3, car3);
+        Car Car1 = new Car(1, car1.getTranslateX(), car1);
+        Car Car2 = new Car(2, car2.getTranslateX(), car2);
+        Car Car3 = new Car(3, car3.getTranslateX(), car3);
 
 
         //EVENT HANDLERS
 
         EventHandler<ActionEvent> startPress = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e){
-                
+                System.out.println("Start pressed.");
+
+                Car1.start();
+                Car2.start();
+                Car3.start();
             }
         };
 
         EventHandler<ActionEvent> pausePress = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e){
-                System.out.println("Pause Pressed.");
+                System.out.println("Pause pressed.");
+                stopCars(Car1, Car2, Car3);
             }
         };
 
         EventHandler<ActionEvent> resetPress = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e){
-                System.out.println("Reset Pressed.");
+                System.out.println("Reset pressed.");
             }
         };
 
@@ -104,34 +104,53 @@ public class RaceTrack extends Application{
         primaryStage.show();
         
     }
+
+    public void stopCars(Car c1, Car c2, Car c3){
+        c1.interrupt();
+        c2.interrupt();
+        c3.interrupt();
+    }
 }
 
 class Car extends Thread{
-    private int ID;
-    private int distance;
-    private ImageView carImage;
+    int ID;
+    double distance;
+    ImageView carImage;
+    boolean isFinished;
 
-    public Car(int id, ImageView aCar){
+    public Car(int id, double dist, ImageView aCar){
         this.ID = id;
-        this.distance = 0;
+        this.distance = dist;
         this.carImage = aCar;
+        this.isFinished = false;
     }
 
     @Override
     public void run(){
+        double increase = 0;
         while(true) {
+            increase = ThreadLocalRandom.current().nextInt(0, 11);
+            this.distance = this.distance + increase;
+
             Platform.runLater(()->{
-                int increase = 0;
-                increase = ThreadLocalRandom.current().nextInt(0, 11);
-                this.carImage.setTranslateX(increase);
-                this.distance = this.distance + increase;
-                if (this.distance >= 500){
-                    System.out.println("Car #" + this.ID + " wins!");
-                }
-                else{
-                    System.out.println("Car #" + this.ID + " moved " + increase + " pixels.");
-                }
+                this.carImage.setTranslateX(this.distance);
             });
+
+            if (this.distance >= 435){
+                System.out.println("Car #" + this.ID + " wins!");
+                this.isFinished = true;
+                break;
+            }
+            else{
+                System.out.println("Car #" + this.ID + " moved " + increase + " pixels.");
+            }
+
+            try{
+                Thread.sleep(50);
+            }
+            catch (InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
