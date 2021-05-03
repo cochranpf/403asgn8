@@ -1,8 +1,14 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class RaceTrack extends Application{
@@ -12,14 +18,46 @@ public class RaceTrack extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Richmond Raceway");
+        
         primaryStage.setMinHeight(200);
         primaryStage.setMinWidth(500);
         primaryStage.setMaxHeight(200);
         primaryStage.setMaxWidth(500);
 
+
+
+        EventHandler<ActionEvent> startPress = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e){
+                System.out.println("Start Pressed.");
+            }
+        };
+
+        EventHandler<ActionEvent> pausePress = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e){
+                System.out.println("Pause Pressed.");
+            }
+        };
+
+        EventHandler<ActionEvent> resetPress = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e){
+                System.out.println("Reset Pressed.");
+            }
+        };
+
         VBox root = new VBox();
         Scene startScene = new Scene(root);
+
+        HBox buttonZone = new HBox();
+
+        Button startButton = new Button("Start");
+        Button pauseButton = new Button("Pause");
+        Button resetButton = new Button("Reset");
+
+        startButton.setOnAction(startPress);
+        pauseButton.setOnAction(pausePress);
+        resetButton.setOnAction(resetPress);
+
+        buttonZone.getChildren().addAll(startButton, pauseButton, resetButton);
 
         Image carOne = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSWbkDwxzF8xFFS92Hj_alTdablTa322lxNw&usqp=CAU");
         Image carTwo = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSWbkDwxzF8xFFS92Hj_alTdablTa322lxNw&usqp=CAU");
@@ -29,15 +67,26 @@ public class RaceTrack extends Application{
         ImageView car2 = new ImageView(carTwo);
         ImageView car3 = new ImageView(carThree);
 
-        car1.setFitHeight(20);
-        car1.setFitWidth(45);
-        car2.setFitHeight(20);
-        car2.setFitWidth(45);
-        car3.setFitHeight(20);
-        car3.setFitWidth(45);
+        car1.setFitHeight(30);
+        car1.setFitWidth(65);
+        car2.setFitHeight(30);
+        car2.setFitWidth(65);
+        car3.setFitHeight(30);
+        car3.setFitWidth(65);
 
-        root.getChildren().addAll(car1, car2, car3);
+        Rectangle track1 = new Rectangle(500, 2);
+        Rectangle track2 = new Rectangle(500, 2);
+        Rectangle track3 = new Rectangle(500, 2);
 
+        track1.setFill(Color.DARKGREY);
+        track2.setFill(Color.DARKGREY);
+        track3.setFill(Color.DARKGREY);
+
+        
+
+        root.getChildren().addAll(buttonZone, car1, track1, car2, track2, car3, track3);
+
+        primaryStage.setTitle("Richmond Raceway");
         primaryStage.setScene(startScene);
         primaryStage.show();
         
